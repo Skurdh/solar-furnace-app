@@ -23,7 +23,7 @@ public void setup() {
   
   fill(0);
   t = new GUIText(0, 20, 0, 0, "Salut à tous les amis");
-  textFont(font[FONT_STYLE.get("regular")]);
+  textFont(font.get("regular"));
 }
 
 public void draw() {
