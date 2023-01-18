@@ -7,23 +7,24 @@ Classe parent de tous les élèments d'interfaces (Boutons, Texte, ..)
 
 class GUIElement {
     // Properties / Propriétés
-    public int pos_x, pos_y, width, height; // Position x, y, largeur, hauteur de l'élément
+    public int pos_x, pos_y, size_w, size_h; // Position x, y, largeur, hauteur de l'élément
     public String label; // Nom de l'élement
-    public PIVOT pivot_x, pivot_y; // Position du pivot de l'élément
+    public int pivot_x;
+    public int pivot_y; // Position du pivot de l'élément
 
     // Constructor / Constructeur
     // Premier constructeur raccourci
     GUIElement (int x, int y, int w, int h, String l ) {
         pos_x = x; pos_y = y;
-        width = w; height = h;
+        size_w = w; size_h = h;
         label = l;
-        pivot_x = PIVOT.LEFT;
-        pivot_y = PIVOT.TOP;
+        pivot_x = LEFT;
+        pivot_y = TOP;
     }
     // Deuxième constructeur avec les paramètres de pivot
-    GUIElement (int x, int y, int w, int h, String l, PIVOT p_x, PIVOT p_y) {
+    GUIElement (int p_x, int x, int p_y, int y, int w, int h, String l) {
         pos_x = x; pos_y = y;
-        width = w; height = h;
+        size_w = w; size_h = h;
         label = l;
         pivot_x = p_x;
         pivot_y = p_y;
@@ -38,7 +39,8 @@ class GUIElement {
         // Fonction qui sera appelée dans la boucle mouseMoved() de Processing
     }
 
-    void custom_mouse_pressed() {
+    boolean custom_mouse_pressed() {
+      return false;
         // Fonction qui sera appelée dans la boucle mousePressed() de Processing
     }
 
@@ -56,5 +58,9 @@ class GUIElement {
 
     int get_global_pos_y() {
         return pos_y;
+    }
+    
+    boolean is_mouse_hover() {
+      return mouseX >= get_global_pos_x() && mouseX <= get_global_pos_x() + size_w && mouseY >= get_global_pos_y() && mouseY <= get_global_pos_y() + size_h;
     }
 }
