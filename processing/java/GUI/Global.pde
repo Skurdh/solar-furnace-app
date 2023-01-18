@@ -1,1 +1,0 @@
-enum PIVOT { TOP, BOTTOM, LEFT, RIGHT, CENTER };
