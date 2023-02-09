@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardReceiveMonitor"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    app:cardCornerRadius="7dp"
+    app:cardElevation="7dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp">
+
+        <TextView
+            android:id="@+id/txtMonitorTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HUMIDITE"
+            android:textSize="12sp"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtMonitorValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp"
+            android:layout_below="@+id/txtMonitorTitle"
+            android:text="50%" />
+
+        <ProgressBar
+            android:id="@+id/progressMonitorTimer"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="75dp"
+            android:layout_height="10dp"
+            android:layout_marginTop="9dp"
+           android:layout_below="@+id/txtMonitorValue"
+            android:layout_centerHorizontal="true"
+            android:indeterminate="false"
+            android:progressTint="@color/main_color"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/txtCountUpTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textSize="10sp"
+            android:textStyle="italic"
+            android:layout_marginTop="6dp"
+            android:layout_below="@+id/txtMonitorValue"
+            android:text="00:00"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+
+</com.google.android.material.card.MaterialCardView>
