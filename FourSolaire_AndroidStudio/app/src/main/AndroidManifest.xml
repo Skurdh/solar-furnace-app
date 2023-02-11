@@ -26,15 +26,17 @@
         android:theme="@style/Theme.FourSolaire"
         tools:targetApi="33">
         <activity
-            android:name=".DevelopperBluetoothControlActivity"
-            android:exported="false">
+            android:name=".dev.DeveloperBluetoothControlActivity"
+            android:exported="false"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter android:label="@string/config_label">
                 <action android:name="android.intent.action.MAIN" />
 

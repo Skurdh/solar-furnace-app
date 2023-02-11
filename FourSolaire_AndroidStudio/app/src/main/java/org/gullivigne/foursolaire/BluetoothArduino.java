@@ -16,7 +16,7 @@ import java.util.UUID;
 public class BluetoothArduino {
     private static final int ERROR_READ = 0;
     private static final String DEBUG_TAG = "BTArduino";
-    public static final int MESSAGE_READ = 1;
+    public static final int MESSAGE_READ = 1, MESSAGE_REQUEST = 2;
 
 
     private static BluetoothArduino instance = null;
@@ -25,7 +25,7 @@ public class BluetoothArduino {
     private UUID arduinoUUID;
     private BluetoothDevice arduinoDevice;
     private BTConnectedThread btConnectedThread = null;
-    private Context mContext;
+    private final Context mContext;
 
     private BluetoothArduino(Context context) {
         mContext = context;

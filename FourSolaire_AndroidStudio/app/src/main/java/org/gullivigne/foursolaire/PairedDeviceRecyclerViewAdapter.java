@@ -1,11 +1,9 @@
 package org.gullivigne.foursolaire;
 
 import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +12,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.gullivigne.foursolaire.dev.DeveloperBluetoothControlActivity;
 
 import java.util.ArrayList;
 
@@ -48,7 +47,7 @@ public class PairedDeviceRecyclerViewAdapter extends RecyclerView.Adapter<Paired
                 BluetoothArduino.getInstance(mContext).setArduinoDevice(pairedDevices.get(holder.getAdapterPosition()));
                 BluetoothArduino.getInstance(mContext).setArduinoUUID(pairedDevices.get(holder.getAdapterPosition()).getUuids()[0].getUuid());
                 if (BluetoothArduino.getInstance(mContext).startConnection()) {
-                    Intent intent = new Intent(mContext, DevelopperBluetoothControlActivity.class);
+                    Intent intent = new Intent(mContext, DeveloperBluetoothControlActivity.class);
                     mContext.startActivity(intent);
                 } else {
                     Toast.makeText(mContext, R.string.config_bt_connection_failure, Toast.LENGTH_SHORT).show();
@@ -77,7 +76,7 @@ public class PairedDeviceRecyclerViewAdapter extends RecyclerView.Adapter<Paired
             super(itemView);
             cardParent = itemView.findViewById(R.id.cardScanPairedDevices);
             txtPairedDeviceName = itemView.findViewById(R.id.txtScanPairedDevicesItemName);
-            txtPairedDeviceAdress = itemView.findViewById(R.id.txtScanPairedDevicesItemAdress);
+            txtPairedDeviceAdress = itemView.findViewById(R.id.txtMonitorValue);
         }
     }
 }

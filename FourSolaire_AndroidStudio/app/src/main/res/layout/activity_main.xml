@@ -35,14 +35,16 @@
             android:contentDescription="Paired Devices Icons"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_action_devices" />
+            app:srcCompat="@drawable/ic_action_devices"
+            app:tint="#2E2E2E" />
 
         <Button
             android:id="@+id/btnScanPairedDevices"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="12dp"
             android:text="@string/config_bt_paired_devices_btn"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -51,7 +53,8 @@
             android:id="@+id/recycleViewPairedDevices"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/btnScanPairedDevices"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/imgIconDevices"
@@ -84,6 +87,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="96dp"
+            android:textColor="@color/white"
             android:text="Button" />
 
 

@@ -23,7 +23,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txtScanPairedDevicesItemAdress"
+            android:id="@+id/txtMonitorValue"
             android:text="xx:xx:xx:xx:xx:xx"
             android:layout_below="@+id/txtScanPairedDevicesItemName"/>
 

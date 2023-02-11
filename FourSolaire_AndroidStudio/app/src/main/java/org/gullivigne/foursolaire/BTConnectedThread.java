@@ -2,6 +2,7 @@ package org.gullivigne.foursolaire;
 
 import android.bluetooth.BluetoothSocket;
 import android.icu.util.Output;
+import android.os.Debug;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
@@ -43,13 +44,18 @@ public class BTConnectedThread extends Thread {
     public void run() {
         byte[] buffer = new byte[1024];
         int bytes = 0;
+        int cnt = 0;
 
         // Keep listening to the InputStream until an exception occurs.
         while (true) {
             try {
                 if (btInStream.available() > 0) {
+//                    Log.d(DEBUG_TAG, "Buffer size [" + String.valueOf(btInStream.available()) + "] ?" + String.valueOf(btInStream.available() == 0));
                     byte tmpByte = (byte) btInStream.read();
+//                    Log.d(DEBUG_TAG, "Buffer size [" + String.valueOf(btInStream.available()) + "] char = " + (char) tmpByte + String.valueOf(btInStream.available() == 0));
                     if (tmpByte == '\n') {
+                        cnt++;
+//                        Log.d(DEBUG_TAG, "Buffer full received" + String.valueOf(cnt));
                         mHandler.obtainMessage(BluetoothArduino.MESSAGE_READ, new String(buffer, 0, bytes)).sendToTarget();
                         bytes = 0;
                         buffer = new byte[1024];
@@ -58,14 +64,6 @@ public class BTConnectedThread extends Thread {
                         bytes++;
                     }
                 }
-                
-                
-
-                bytes = btInStream.read(buffer);
-                if (bytes > 0 && mHandler != null) {
-                    SystemClock.sleep(100);
-                    mHandler.obtainMessage(BluetoothArduino.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
-                }// Send the obtained bytes to the UI activity
             } catch (IOException e) {
                 Log.d(DEBUG_TAG, "Input stream was disconnected", e);
                 break;
@@ -76,6 +74,7 @@ public class BTConnectedThread extends Thread {
     public void write(String input) {
         byte[] bytes = input.getBytes(); //converts entered String into bytes
         try {
+            Log.d(DEBUG_TAG, input);
             btOutStream.write(bytes);
         } catch (IOException e) {
             Log.e("Send Error","Unable to send message",e);

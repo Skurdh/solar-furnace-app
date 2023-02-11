@@ -1,5 +1,6 @@
 package org.gullivigne.foursolaire;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
@@ -10,14 +11,20 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.gullivigne.foursolaire.dev.DeveloperBluetoothControlActivity;
+import org.gullivigne.foursolaire.dev.SaveManager;
 
 import java.util.Set;
 
@@ -43,8 +50,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initView();
+
+        SaveManager.getInstance(this);
 
         bluetooth = BluetoothArduino.getInstance(this);
 
@@ -90,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                         if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                             requestPermission(Manifest.permission.BLUETOOTH_CONNECT, REQUEST_BLUETOOTH_CODE);
                         } else {
-                            Toast.makeText(MainActivity.this, "Permission granted", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Permission accordée !", Toast.LENGTH_SHORT).show();
                         }
                         break;
                 }
@@ -117,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             current_state = ENABLED;
             layoutBtPairedDevices.setVisibility(View.VISIBLE);
-            Toast.makeText(MainActivity.this, "Permission (already) Granted!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(MainActivity.this, "Permission (already) Granted!", Toast.LENGTH_SHORT).show();
             Set<BluetoothDevice> pairedDevices = bluetooth.getBluetoothAdapter().getBondedDevices();
 
             if (pairedDevices.size() > 0) {

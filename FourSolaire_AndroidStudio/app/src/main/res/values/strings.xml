@@ -16,6 +16,33 @@
     <string name="title_activity_bluetooth_control">BluetoothControlActivity</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
+
+    <string name="dev_mode">Mode</string>
+    <string name="dev_nl">NL</string>
+    <string name="dev_cr"><strike>CR</strike></string>
+    <string name="dev_terminal">Terminal</string>
+    <string name="dev_terminal_msg_hint">Entrez la commande</string>
+    <string name="dev_terminal_speakable">Envoyez</string>
+    <string name="dev_terminal_clear">Vider</string>
+    <string name="dev_terminal_settings_autoscroll">Auto-scroll</string>
+    <string name="dev_monitor">Moniteur</string>
+
+    <string name="dev_monitor_add_receiver_title">Création d\'un récepteur</string>
+    <string name="dev_monitor_receiver_name">Nom</string>
+    <string name="dev_monitor_receiver_unit">Unité</string>
+
+    <string name="dev_receiver_creation_explanation_passive"><em>Mode passif :</em> Le récepteur attend les données envoyé par Arduino.</string>
+    <string name="dev_receiver_creation_explanation_active"><em>Mode actif :</em></string>
+    <string name="dev_receiver_creation_error">Il manque des informations. <cite>(Champs avec *)</cite></string>
+    <string name="dev_mode_explication">
+        <![CDATA[
+        <em>En développement..</em>
+        <ul>
+            <li> Ajoute <b><cite>\\n</cite></b> à la fin des messages envoyés par le téléphone.</li>
+            <li> Pour envoyer des données depuis Arduino, utilisez <b><em>println()</em></b> ou ajouter <b><cite>\\n</cite></b> à la fin de vos Strings pour signaler la fin de la commande.</li>
+        </ul>
+    ]]>
+    </string>
 </resources>
 
 
