@@ -1,11 +1,8 @@
 <resources>
     <string name="app_name">Four solaire</string>
     <string name="config_label">Configuration</string>
-    <string name="config_bt_not_enabled_info">Pour utiliser l\'application, activez le Bluetooth.</string>
     <string name="config_bt_not_enabled_btn">Continuer</string>
-    <string name="config_bt_not_supported_info">Votre appareil ne supporte pas le Bluetooth :(</string>
     <string name="config_bt_not_supported_btn">Quitter</string>
-    <string name="config_bt_not_supported_toast1">Le Bluetooth n\'est toujours pas activité \!</string>
     <string name="config_bt_paired_devices_title">Dispositifs appareillés </string>
     <string name="config_bt_paired_devices_btn">Scanner</string>
     <string name="config_bt_permission_bt_connect_title">Permission nécessaire</string>
@@ -43,6 +40,33 @@
         </ul>
     ]]>
     </string>
+
+
+    <string name="activity_bt_content_description">Android icone</string>
+    <string name="activity_devices_content_description">Périphérique icone</string>
+
+    <string name="main_bt_not_supported_title">Bluetooth non supporté</string>
+    <string name="main_bt_not_supported_help">Votre appareil ne supporte pas le Bluetooth :(</string>
+    <string name="main_bt_not_supported_button">Quitter</string>
+
+    <string name="main_bt_not_enabled_title">Bluetooth non activé</string>
+    <string name="main_bt_not_enabled_help">Pour utiliser l\'application, activez le Bluetooth. ;)</string>
+    <string name="main_bt_not_enabled_button">C\'est bon !</string>
+    <string name="main_bt_not_enabled_toast">Le Bluetooth n\'est toujours pas activité \!</string>
+
+    <string name="main_bt_permissions_title">Activer les permissions</string>
+    <string name="main_bt_permissions_help">Pour utiliser l\'application merci d\'activer les permissions ! hihihi</string>
+    <string name="main_bt_permissions_button_p1">Activer</string>
+    <string name="main_bt_permissions_button_p2">Valider</string>
+    <string name="main_bt_permissions_toast">La permission n\'est toujours pas accordée !</string>
+
+    <string name="main_bt_permissions_popup_title">Permission nécessaire</string>
+    <string name="main_bt_permissions_popup_help">Depuis Android 12 (API level 31), la permission `BLUETOOTH_CONNECT` est nécessaire pour se connecter aux appareils Bluetooth.</string>
+    <string name="main_bt_permissions_positive_button">OK</string>
+
+    <string name="main_devices_title">Périphériques appareillés</string>
+    <string name="main_devices_button">Rafraichir</string>
+    <string name="main_devices_help">Aucun périphérique trouvé. N\'oubliez pas de l\'appareiller dans les paramètres Bluetooth !</string>
 </resources>
 
 

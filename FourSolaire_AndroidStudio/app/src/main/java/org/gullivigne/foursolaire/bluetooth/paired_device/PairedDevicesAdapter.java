@@ -1,4 +1,4 @@
-package org.gullivigne.foursolaire;
+package org.gullivigne.foursolaire.bluetooth.paired_device;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
@@ -14,16 +14,18 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.gullivigne.foursolaire.BluetoothArduino;
+import org.gullivigne.foursolaire.R;
 import org.gullivigne.foursolaire.dev.DeveloperBluetoothControlActivity;
 
 import java.util.ArrayList;
 
-public class PairedDeviceRecyclerViewAdapter extends RecyclerView.Adapter<PairedDeviceRecyclerViewAdapter.ViewHolder> {
+public class PairedDevicesAdapter extends RecyclerView.Adapter<PairedDevicesAdapter.ViewHolder> {
 
     private ArrayList<BluetoothDevice> pairedDevices;
     private Context mContext;
 
-    public PairedDeviceRecyclerViewAdapter(Context context) {
+    public PairedDevicesAdapter(Context context) {
         mContext = context;
         pairedDevices = new ArrayList<>();
     }

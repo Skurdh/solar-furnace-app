@@ -25,7 +25,7 @@ public class BluetoothArduino {
     private UUID arduinoUUID;
     private BluetoothDevice arduinoDevice;
     private BTConnectedThread btConnectedThread = null;
-    private final Context mContext;
+    private Context mContext;
 
     private BluetoothArduino(Context context) {
         mContext = context;
@@ -37,6 +37,9 @@ public class BluetoothArduino {
     public static BluetoothArduino getInstance(Context context) {
         if (instance == null) {
             instance = new BluetoothArduino(context);
+        }
+        if (context != instance.mContext) {
+            instance.mContext = context;
         }
         return instance;
     }

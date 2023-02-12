@@ -23,10 +23,25 @@ public class SaveManager {
 
     private static SaveManager instance = null;
     private SharedPreferences sharedPreferences;
-
+    private Context mContext;
 
     public SaveManager(Context context) {
-        selectFilesList(context);
+        mContext = context;
+    }
+
+    /**
+     * Singleton pattern, create an unique instance of SaveManager class and return it.
+     * @return instance
+     */
+    public static SaveManager getInstance(Context context) {
+        if (instance == null) {
+            instance = new SaveManager(context);
+        }
+        if (context != instance.mContext) {
+            instance.mContext = context;
+        }
+
+        return instance;
     }
 
     /* ----- DEV FILES ----- */
@@ -193,17 +208,6 @@ public class SaveManager {
             editor.putString(KEY_ACTIVE_RECEIVERS, gson.toJson(receivers));
             editor.apply();
         }
-    }
-
-    /**
-     * Singleton pattern, create an unique instance of SaveManager class and return it.
-     * @return instance
-     */
-    public static SaveManager getInstance(Context context) {
-        if (instance == null) {
-            instance = new SaveManager(context);
-        }
-        return instance;
     }
 
     /* ----- CONTROL BUTTON ----- */
