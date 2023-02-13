@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,29 +9,47 @@
     app:cardElevation="7dp"
     android:layout_margin="12dp">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:paddingHorizontal="12dp"
         android:paddingVertical="8dp">
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/txtScanPairedDevicesItemName"
-            android:text="DEVICE NAME"
-            android:textStyle="bold"/>
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Device name"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txtScanPairedDevicesItemAlias"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:lines="1"
+            android:maxWidth="116dp"
+            android:text="Alias name"
+            android:textColor="@color/main_color"
+            android:textStyle="bold|italic"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/txtScanPairedDevicesItemName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txtScanPairedDevicesItemName"
+            app:layout_constraintTop_toTopOf="@+id/txtScanPairedDevicesItemName" />
+
+
+        <TextView
             android:id="@+id/txtMonitorValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtScanPairedDevicesItemName"
+            android:layout_marginTop="8dp"
             android:text="xx:xx:xx:xx:xx:xx"
-            android:layout_below="@+id/txtScanPairedDevicesItemName"/>
+            app:layout_constraintStart_toStartOf="@+id/txtScanPairedDevicesItemName"
+            app:layout_constraintTop_toBottomOf="@+id/txtScanPairedDevicesItemName" />
 
-    </RelativeLayout>
-
-
-
-
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

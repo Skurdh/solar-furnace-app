@@ -67,6 +67,8 @@
     <string name="main_devices_title">Périphériques appareillés</string>
     <string name="main_devices_button">Rafraichir</string>
     <string name="main_devices_help">Aucun périphérique trouvé. N\'oubliez pas de l\'appareiller dans les paramètres Bluetooth !</string>
+
+    <string name="popup_connecting_help">Connexion en cours…</string>
 </resources>
 
 

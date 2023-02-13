@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:constraint_referenced_ids="txtPairedDevicesTitle, txtPairedDevicesVoid, imgIconDevices, recycleViewPairedDevices" />
+        app:constraint_referenced_ids="txtPairedDevicesTitle, imgIconDevices, recycleViewPairedDevices" />
 
     <ImageView
         android:id="@+id/imgIconDevices"
@@ -57,6 +57,7 @@
         android:text="@string/main_devices_help"
         android:textAlignment="center"
         android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/btnConfiguration"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -70,7 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:constraint_referenced_ids="imgAndroidBluetooth, txtInfoBluetoothPermissions" />
+        app:constraint_referenced_ids="txtInfoBluetoothPermissions" />
 
     <ImageView
         android:id="@+id/imgAndroidBluetooth"
@@ -112,14 +113,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="SpeakableTextPresentCheck" />
-
-    <!--  BLUETOOTH PERMISSIONS  -->
-    <androidx.constraintlayout.widget.Group
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/grpBluetoothPermissions"
-        android:visibility="gone"
-        app:constraint_referenced_ids="imgAndroidBluetooth"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
