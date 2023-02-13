@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerPairedDevices;
     private PairedDevicesAdapter adapterPairedDevices;
-
     private Handler handler;
     private AlertDialog connectingDialog;
 
@@ -289,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
         setTitle(R.string.main_bt_not_enabled_title);
         showBluetoothGroup();
         txtBluetoothPermissions.setText(R.string.main_bt_not_enabled_help);
+        btnConfiguration.setVisibility(View.VISIBLE);
         btnConfiguration.setText(R.string.main_bt_not_enabled_button);
     }
 
@@ -391,8 +391,8 @@ public class MainActivity extends AppCompatActivity {
         // Check Bluetooth Permissions and request them
         else if (Build.VERSION.SDK_INT > 30 &&
                 ActivityCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            openPopupPermissionExplanations();
             showPermissionRequest();
+            openPopupPermissionExplanations();
         }
         // Check Bluetooth is activated
         else if (!checkBluetoothEnabled()) {
