@@ -1,8 +1,7 @@
-package org.gullivigne.foursolaire.dev;
+package org.gullivigne.foursolaire.database;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -11,21 +10,23 @@ import org.gullivigne.foursolaire.dev.controler.Controller;
 import org.gullivigne.foursolaire.dev.monitor.ActiveReceiverMonitor;
 import org.gullivigne.foursolaire.dev.monitor.PassiveReceiverMonitor;
 
-import java.io.File;
 import java.util.ArrayList;
 
-public class SaveManager {
+public class DatabaseManager {
 
-    private static final String KEY_FILES_LIST = "db_files_name",
+    private static final String KEY_APP = "db_app",
+            KEY_DEVICES_INFO = "db_devices_info",
             KEY_PASSIVE_RECEIVERS = "db_passive_receivers",
             KEY_ACTIVE_RECEIVERS = "db_active_receivers",
             KEY_CONTROLLERS = "db_controllers";
 
-    private static SaveManager instance = null;
+    private static DatabaseManager instance = null;
     private SharedPreferences sharedPreferences;
     private Context mContext;
 
-    public SaveManager(Context context) {
+    private String currentKey = "";
+
+    private DatabaseManager(Context context) {
         mContext = context;
     }
 
@@ -33,9 +34,9 @@ public class SaveManager {
      * Singleton pattern, create an unique instance of SaveManager class and return it.
      * @return instance
      */
-    public static SaveManager getInstance(Context context) {
+    public static DatabaseManager getInstance(Context context) {
         if (instance == null) {
-            instance = new SaveManager(context);
+            instance = new DatabaseManager(context);
         }
         if (context != instance.mContext) {
             instance.mContext = context;
@@ -44,7 +45,62 @@ public class SaveManager {
         return instance;
     }
 
+    /**
+     *
+     * @param databaseKey
+     */
+    private void checkDatabaseCursor(String databaseKey) {
+        if (currentKey.equals(databaseKey)) { return; }
+
+        sharedPreferences = mContext.getSharedPreferences(databaseKey, Context.MODE_PRIVATE);
+        currentKey = databaseKey;
+    }
+
+    /* ----- DEVICE INFORMATION ----- */
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<DeviceInfoData> getDevicesInfo() {
+        checkDatabaseCursor(KEY_APP);
+
+        Gson gson = new Gson();
+        if (sharedPreferences.getString(KEY_APP, null) == null) {
+            return null;
+        } else {
+            return gson.fromJson(sharedPreferences.getString(KEY_APP, null), new TypeToken<ArrayList<DeviceInfoData>>() {}.getType());
+        }
+    }
+
+    /**
+     *
+     * @param deviceInfo
+     * @return
+     */
+    public boolean addDeviceInfo(DeviceInfoData deviceInfo) {
+        checkDatabaseCursor(KEY_APP);
+
+        ArrayList<DeviceInfoData> devicesInfo = getDevicesInfo();
+        if (devicesInfo == null) { devicesInfo = new ArrayList<>(); }
+        if (devicesInfo.add(deviceInfo)) {
+            Gson gson = new Gson();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            if (devicesInfo.size() - 1 > 0) { editor.remove(KEY_DEVICES_INFO); }
+            editor.putString(KEY_DEVICES_INFO, gson.toJson(devicesInfo));
+            editor.apply();
+            return true;
+        }
+
+        return false;
+    }
+
+
+
     /* ----- DEV FILES ----- */
+
+
+
 
     /**
      * Retrieves the files name data associated with the bluetooth device address
@@ -108,12 +164,7 @@ public class SaveManager {
         sharedPreferences = context.getSharedPreferences(file_name, Context.MODE_PRIVATE);
     }
 
-    /**
-     * Select the files list SharedPreference database
-     */
-    public void selectFilesList(Context context) {
-        sharedPreferences = context.getSharedPreferences(KEY_FILES_LIST, Context.MODE_PRIVATE);
-    }
+
 
 
     /* ----- PASSIVE RECEIVER ----- */
