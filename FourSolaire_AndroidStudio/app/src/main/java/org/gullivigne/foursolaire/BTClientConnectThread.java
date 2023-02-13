@@ -39,7 +39,6 @@ public class BTClientConnectThread extends Thread {
             }
             return;
         }
-
     }
 
     public void cancel() {

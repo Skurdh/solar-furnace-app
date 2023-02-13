@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import java.util.UUID;
 
 public class BluetoothArduino {
+
+
     private static final int ERROR_READ = 0;
     private static final String DEBUG_TAG = "BTArduino";
     public static final int MESSAGE_READ = 1, MESSAGE_REQUEST = 2;
@@ -52,15 +54,29 @@ public class BluetoothArduino {
         return instance;
     }
 
-    public boolean startConnection() {
+    public void startConnection(Handler handler) {
         BTClientConnectThread connectThread = new BTClientConnectThread(arduinoDevice, arduinoUUID, mContext);
-        connectThread.run();
+        Looper.prepare();
+        Handler clientHandler = new Handler(Looper.myLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                if (msg.what == 0) {
+
+                }
+            }
+        };
+        connectThread.start();
+
+
+
         if (connectThread.getBtSocket().isConnected()) {
             btConnectedThread = new BTConnectedThread(connectThread.getBtSocket(), null);
             btConnectedThread.start();
-            return true;
+            handler.obtainMessage(MainActivity.MESSAGE_CONNECTING, true).sendToTarget();
         } else {
-            return false;
+            connectThread.cancel();
+            connectThread.interrupt();
+            handler.obtainMessage(MainActivity.MESSAGE_CONNECTING, false).sendToTarget();
         }
     }
 
