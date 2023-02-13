@@ -1,32 +1,35 @@
 package org.gullivigne.foursolaire.bluetooth.paired_device;
 
 import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothDevice;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.gullivigne.foursolaire.BluetoothArduino;
+import org.gullivigne.foursolaire.MainActivity;
 import org.gullivigne.foursolaire.R;
-import org.gullivigne.foursolaire.dev.DeveloperBluetoothControlActivity;
+import org.gullivigne.foursolaire.bluetooth.BluetoothService;
 
 import java.util.ArrayList;
 
 public class PairedDevicesAdapter extends RecyclerView.Adapter<PairedDevicesAdapter.ViewHolder> {
 
-    private ArrayList<BluetoothDevice> pairedDevices;
-    private Context mContext;
 
-    public PairedDevicesAdapter(Context context) {
-        mContext = context;
+
+    private final ArrayList<PairedDevice> pairedDevices;
+    private final Handler mHandler;
+    private final AlertDialog alertDialog;
+
+    public PairedDevicesAdapter(Handler handler, AlertDialog connectingDialog) {
+        mHandler = handler;
+        alertDialog = connectingDialog;
         pairedDevices = new ArrayList<>();
     }
 
@@ -40,21 +43,21 @@ public class PairedDevicesAdapter extends RecyclerView.Adapter<PairedDevicesAdap
     @SuppressLint("MissingPermission")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.txtPairedDeviceName.setText(pairedDevices.get(position).getName());
-        holder.txtPairedDeviceAdress.setText(pairedDevices.get(position).getAddress());
+        PairedDevice device = pairedDevices.get(position);
+
+        holder.txtPairedDeviceName.setText(device.getName());
+        holder.txtPairedDeviceAddress.setText(device.getAddress());
+         if (!device.getAlias().isEmpty()) {
+             holder.getTxtPairedDeviceAlias.setVisibility(View.VISIBLE);
+             holder.getTxtPairedDeviceAlias.setText(device.getAlias());
+         }
 
         holder.cardParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BluetoothArduino.getInstance(mContext).setArduinoDevice(pairedDevices.get(holder.getAdapterPosition()));
-                BluetoothArduino.getInstance(mContext).setArduinoUUID(pairedDevices.get(holder.getAdapterPosition()).getUuids()[0].getUuid());
-                if (BluetoothArduino.getInstance(mContext).startConnection()) {
-                    Intent intent = new Intent(mContext, DeveloperBluetoothControlActivity.class);
-                    mContext.startActivity(intent);
-                } else {
-                    Toast.makeText(mContext, R.string.config_bt_connection_failure, Toast.LENGTH_SHORT).show();
-                }
-
+                alertDialog.show();
+                assert BluetoothService.getInstance() != null;
+                BluetoothService.getInstance().connect(device.getDevice());
             }
         });
     }
@@ -64,21 +67,22 @@ public class PairedDevicesAdapter extends RecyclerView.Adapter<PairedDevicesAdap
         return this.pairedDevices.size();
     }
 
-    public void addPairedDevice(BluetoothDevice device) {
+    public void addPairedDevice(PairedDevice device) {
         this.pairedDevices.add(device);
         notifyItemInserted(this.pairedDevices.size());
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView txtPairedDeviceName, txtPairedDeviceAdress;
-        private CardView cardParent;
+        private final TextView txtPairedDeviceName, txtPairedDeviceAddress, getTxtPairedDeviceAlias;
+        private final CardView cardParent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             cardParent = itemView.findViewById(R.id.cardScanPairedDevices);
             txtPairedDeviceName = itemView.findViewById(R.id.txtScanPairedDevicesItemName);
-            txtPairedDeviceAdress = itemView.findViewById(R.id.txtMonitorValue);
+            txtPairedDeviceAddress = itemView.findViewById(R.id.txtMonitorValue);
+            getTxtPairedDeviceAlias = itemView.findViewById(R.id.txtScanPairedDevicesItemAlias);
         }
     }
 }

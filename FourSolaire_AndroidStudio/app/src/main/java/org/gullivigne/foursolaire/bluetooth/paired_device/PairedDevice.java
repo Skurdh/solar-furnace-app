@@ -8,12 +8,14 @@ import java.util.ArrayList;
 public class PairedDevice {
     final private int id;
     final private BluetoothDevice device;
-    private String nickname;
+    private String alias;
     private ArrayList<String> associated_files;
 
     public PairedDevice(int id, BluetoothDevice device) {
         this.id = id;
         this.device = device;
+        alias = "";
+        associated_files = new ArrayList<>();
     }
 
     public int getId() {
@@ -35,12 +37,12 @@ public class PairedDevice {
     }
 
 
-    public String getNickname() {
-        return nickname;
+    public String getAlias() {
+        return alias;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public ArrayList<String> getAssociated_files() {

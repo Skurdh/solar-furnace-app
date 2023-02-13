@@ -37,6 +37,7 @@ import org.gullivigne.foursolaire.dev.monitor.ReceiverMonitor;
 import org.gullivigne.foursolaire.dev.monitor.PassiveReceiverMonitor;
 import org.gullivigne.foursolaire.dev.terminal.TerminalMessage;
 import org.gullivigne.foursolaire.dev.terminal.TerminalRecyclerViewAdapter;
+import org.gullivigne.foursolaire.database.DatabaseManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -76,7 +77,7 @@ public class DeveloperBluetoothControlActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_developper_bluetooth_control);
 
-        SaveManager.getInstance(this);
+        DatabaseManager.getInstance(this);
 
         // Handler
         handler = new Handler(Looper.getMainLooper()) {
@@ -195,7 +196,7 @@ public class DeveloperBluetoothControlActivity extends AppCompatActivity {
             }
         });
 
-        ArrayList<PassiveReceiverMonitor> receivers = SaveManager.getInstance(this).getPassiveReceivers();
+        ArrayList<PassiveReceiverMonitor> receivers = DatabaseManager.getInstance(this).getPassiveReceivers();
         if (receivers != null) {
             for (PassiveReceiverMonitor receiver : receivers) {
                 Log.d("DevActivity", receiver.getClass().toString());
@@ -295,7 +296,7 @@ public class DeveloperBluetoothControlActivity extends AppCompatActivity {
                         Toast.makeText(DeveloperBluetoothControlActivity.this, R.string.dev_receiver_creation_error, Toast.LENGTH_LONG).show();
                     } else {
                         PassiveReceiverMonitor newReceiver = new PassiveReceiverMonitor(receiverName, receiverCmd, receiverUnit.isEmpty() ? "" : receiverUnit);
-                        SaveManager.getInstance(DeveloperBluetoothControlActivity.this).addPassiveReceiver(newReceiver);
+                        DatabaseManager.getInstance(DeveloperBluetoothControlActivity.this).addPassiveReceiver(newReceiver);
                         adapterMonitor.addReceiver(newReceiver);
                         dialog.dismiss();
                     }
@@ -306,7 +307,7 @@ public class DeveloperBluetoothControlActivity extends AppCompatActivity {
                         Toast.makeText(DeveloperBluetoothControlActivity.this, R.string.dev_receiver_creation_error, Toast.LENGTH_LONG).show();
                     } else {
                         ActiveReceiverMonitor newReceiver = new ActiveReceiverMonitor(receiverName, receiverRequest, receiverFrequency, receiverCmd, receiverUnit.isEmpty() ? "" : receiverUnit);
-                        SaveManager.getInstance(DeveloperBluetoothControlActivity.this).addActiveReceiver(newReceiver);
+                        DatabaseManager.getInstance(DeveloperBluetoothControlActivity.this).addActiveReceiver(newReceiver);
                         adapterMonitor.addReceiver(newReceiver);
                         dialog.dismiss();
                     }

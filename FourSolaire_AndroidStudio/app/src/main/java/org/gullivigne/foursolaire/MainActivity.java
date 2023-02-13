@@ -17,18 +17,26 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.gullivigne.foursolaire.bluetooth.BluetoothService;
+import org.gullivigne.foursolaire.bluetooth.paired_device.PairedDevice;
 import org.gullivigne.foursolaire.bluetooth.paired_device.PairedDevicesAdapter;
-import org.gullivigne.foursolaire.dev.SaveManager;
+import org.gullivigne.foursolaire.database.DatabaseManager;
+import org.gullivigne.foursolaire.database.DeviceInfoData;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -36,15 +44,19 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int STATE_HELLO = 0, STATE_NOT_SUPPORTED = 1, STATE_PERMISSION_NOT_ALLOWED = 2, STATE_NOT_ENABLED = 1, PERMISSION_NOT_ALLOWED = 2, ENABLED = 3, AUTO_CONNECTION = 4;
+    public static final int MESSAGE_TRY_CONNECT = 0, MESSAGE_CONNECTING = 1;
     private static final int REQUEST_BLUETOOTH_CODE = 1;
 
-    private Group grpBluetoothConfiguration, grpBluetoothPermissions, grpPairedDevices;
+    private Group grpBluetoothConfiguration, grpPairedDevices;
     private TextView txtBluetoothPermissions, txtPairedDevicesVoid;
     private Button btnConfiguration;
+    private ImageView imgAndroid;
 
     private RecyclerView recyclerPairedDevices;
     private PairedDevicesAdapter adapterPairedDevices;
+
+    private Handler handler;
+    private AlertDialog connectingDialog;
 
 
     @Override
@@ -53,12 +65,49 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getWindow().setNavigationBarColor(getColor(R.color.main_color));
 
-        // Create unique instance
-        SaveManager.getInstance(this);
-        BluetoothArduino.getInstance(this);
+        // Create Handler
+        handler = new Handler(Looper.getMainLooper()) {
+            @SuppressLint("MissingPermission")
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                if (msg.what == BluetoothService.MESSAGE_CONNECTION_SUCCESS) {
+                    Log.d("MainActivity", "SUCCESS");
+                } else if (msg.what == BluetoothService.MESSAGE_CONNECTION_FAIL) {
+                    Log.d("MainActivity", "FAIL");
+                } else if (msg.what == BluetoothService.MESSAGE_CONNECTION_LOST) {
+
+                }
+
+
+//                switch (msg.what) {
+////                    case MESSAGE_TRY_CONNECT:
+////                        BluetoothArduino bluetooth = BluetoothArduino.getInstance(MainActivity.this);
+////                        BluetoothDevice device = (BluetoothDevice) msg.obj;
+////                        bluetooth.setArduinoDevice(device);
+////                        bluetooth.setArduinoUUID(device.getUuids()[0].getUuid());
+////
+////                        bluetooth.startConnection(handler);
+////                        break;
+////                    case MESSAGE_CONNECTING:
+////                        if ((boolean) msg.obj) {
+////                            Log.d("MainActivity", "CONNECTED");
+////                        } else {
+////                            Toast.makeText(MainActivity.this, R.string.config_bt_connection_failure, Toast.LENGTH_SHORT).show();
+////                            connectingDialog.dismiss();
+////                        }
+////                        break;
+//                    case BluetoothService.MESSAGE_READ:
+//                }
+            }
+        };
+
+        // Init Singletons
+        DatabaseManager.getInstance(this);
+        BluetoothService.getInstance(handler);
 
         // Init views
         initViewGlobalButton();
+        initConnectingPopup();
         initViewBluetoothPermissions();
         initViewPairedDevices();
 
@@ -118,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 // Button Not Enabled
                 else if (btnText.equals(getString(R.string.main_bt_not_enabled_button))) {
                     if (checkBluetoothEnabled()) {
-                        showDevicePaired();
+                        checkBluetoothHealth();
                     } else {
                         Toast.makeText(MainActivity.this, R.string.main_bt_not_enabled_toast, Toast.LENGTH_SHORT).show();
                     }
@@ -137,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initViewBluetoothPermissions() {
         grpBluetoothConfiguration = findViewById(R.id.grpBluetoothConfiguration);
-        grpBluetoothPermissions = findViewById(R.id.grpBluetoothPermissions);
+        imgAndroid = findViewById(R.id.imgAndroidBluetooth);
         txtBluetoothPermissions = findViewById(R.id.txtInfoBluetoothPermissions);
     }
 
@@ -148,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         grpPairedDevices = findViewById(R.id.grpPairedDevices);
         txtPairedDevicesVoid = findViewById(R.id.txtPairedDevicesVoid);
         recyclerPairedDevices = findViewById(R.id.recycleViewPairedDevices);
-        adapterPairedDevices = new PairedDevicesAdapter(this);
+        adapterPairedDevices = new PairedDevicesAdapter(handler, connectingDialog);
         recyclerPairedDevices.setAdapter(adapterPairedDevices);
         recyclerPairedDevices.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -157,8 +206,8 @@ public class MainActivity extends AppCompatActivity {
      * Show Bluetooth configuration interface and hide all others
      */
     private void showBluetoothGroup () {
-        grpBluetoothPermissions.setVisibility(View.GONE);
         grpPairedDevices.setVisibility(View.GONE);
+        imgAndroid.setVisibility(View.VISIBLE);
         grpBluetoothConfiguration.setVisibility(View.VISIBLE);
     }
 
@@ -168,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
     private void showBluetoothPermissionsGroup() {
         grpBluetoothConfiguration.setVisibility(View.GONE);
         grpPairedDevices.setVisibility(View.GONE);
-        grpBluetoothPermissions.setVisibility(View.VISIBLE);
+        imgAndroid.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -206,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void showDevicePaired() {
         grpBluetoothConfiguration.setVisibility(View.GONE);
-        grpBluetoothPermissions.setVisibility(View.GONE);
+        imgAndroid.setVisibility(View.GONE);
         grpPairedDevices.setVisibility(View.VISIBLE);
 
         setTitle(R.string.main_devices_title);
@@ -243,26 +292,19 @@ public class MainActivity extends AppCompatActivity {
         btnConfiguration.setText(R.string.main_bt_not_enabled_button);
     }
 
-    // Utils
+    /**
+     * Todo
+     */
+    private void initConnectingPopup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final View connectingView = getLayoutInflater().inflate(R.layout.popup_device_connecting_progress, null);
+        builder.setView(connectingView);
+        connectingDialog = builder.create();
+        connectingDialog.setCancelable(false);
+        connectingDialog.setCanceledOnTouchOutside(false);
+    }
 
-//    private void startConfiguration() {
-//        // TODO: SCAN / AUTO CONNECT
-//        if (Build.VERSION.SDK_INT > 30 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-//            showExplanation(MainActivity.this.getResources().getString(R.string.config_bt_permission_bt_connect_title), MainActivity.this.getResources().getString(R.string.config_bt_permission_bt_connect_text), Manifest.permission.READ_PHONE_STATE, REQUEST_BLUETOOTH_CODE);
-//        } else {
-//            current_state = ENABLED;
-//            layoutBtPairedDevices.setVisibility(View.VISIBLE);
-////            Toast.makeText(MainActivity.this, "Permission (already) Granted!", Toast.LENGTH_SHORT).show();
-//            Set<BluetoothDevice> pairedDevices = bluetooth.getBluetoothAdapter().getBondedDevices();
-//
-//            if (pairedDevices.size() > 0) {
-//                // There are paired devices. Get the name and address of each paired device.
-//                for (BluetoothDevice device : pairedDevices) {
-//                    adapter.addPairedDevice(device);
-//                }
-//            }
-//        }
-//    }
+    // Utils
 
     /**
      * TODO : Complete definition
@@ -359,25 +401,50 @@ public class MainActivity extends AppCompatActivity {
         // Bluetooth OK
         else {
             showDevicePaired();
-
+            populatePairedDevicesRecycler();
         }
     }
 
-//    private ArrayList<BluetoothDevice> obtainPairedDevices() {
-//        @SuppressLint("MissingPermission") Set<BluetoothDevice> pairedDevices = BluetoothArduino.getInstance(this).getBluetoothAdapter().getBondedDevices();
-//        if (pairedDevices.size() > 0) {
-//            // There are paired devices. Get the name and address of each paired device.
-////            for (BluetoothDevice device : pairedDevices) {
-////                    adapter.addPairedDevice(device);
-////            }
-//        }
-//    }
+    /**
+     *
+     * @return
+     */
+    @SuppressLint("MissingPermission")
+    private ArrayList<PairedDevice> getPairedDevices() {
+        ArrayList<PairedDevice> devices = new ArrayList<>();
+        int i = 0;
+        Set<BluetoothDevice> pairedDevices = BluetoothArduino.getInstance(this).getBluetoothAdapter().getBondedDevices();
+        for (BluetoothDevice pairedDevice : pairedDevices) {
+            devices.add(new PairedDevice(i, pairedDevice));
+            i++;
+        }
 
-    private void getDevicesInformation() {
-
+        return devices;
     }
 
+    /**
+     *
+     */
+    private void populatePairedDevicesRecycler() {
+        ArrayList<PairedDevice> pairedDevices = getPairedDevices();
+        ArrayList<DeviceInfoData> devicesInfo = DatabaseManager.getInstance(this).getDevicesInfo();
 
+        if (pairedDevices.isEmpty()) {
+            txtPairedDevicesVoid.setVisibility(View.VISIBLE);
+            return;
+        }
 
-
+        // Populate paired device with local data
+        for (PairedDevice device : pairedDevices) {
+            if (devicesInfo != null) {
+                for (DeviceInfoData info : devicesInfo) {
+                    if (device.getAddress().equals(info.getAddress())) {
+                        device.setAlias(info.getAlias());
+                        device.setAssociated_files(info.getFiles_name());
+                    }
+                }
+            }
+            adapterPairedDevices.addPairedDevice(device);
+        }
+    }
 }

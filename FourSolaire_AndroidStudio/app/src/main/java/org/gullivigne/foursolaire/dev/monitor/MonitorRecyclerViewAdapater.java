@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.gullivigne.foursolaire.BluetoothArduino;
 import org.gullivigne.foursolaire.R;
-import org.gullivigne.foursolaire.dev.SaveManager;
 
 import java.util.ArrayList;
 
